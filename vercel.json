@@ -1,16 +1,13 @@
 {
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist",
-  "public": true,
   "rewrites": [
     {
-      "source": "/((?!assets/).*)",
+      "source": "/((?!images/).*)",
       "destination": "/index.html"
     }
   ],
   "headers": [
     {
-      "source": "assets/(.*)",
+      "source": "images/(.*)",
       "headers": [
         {
           "key": "Cache-Control",

@@ -1,7 +1,6 @@
 import { BrandDesign } from '../types/preferences';
 
 // Import images
-import nintendoImage from '../assets/images/nintendo.png';
 import disneyImage from '../assets/images/disney.png';
 import chanelImage from '../assets/images/chanel.png';
 import amexImage from '../assets/images/amex.png';
@@ -15,7 +14,7 @@ import cocaColaImage from '../assets/images/coca-cola.png';
 export const brandDesigns: BrandDesign[] = [
   {
     name: "Nintendo",
-    image: nintendoImage,
+    image: "/images/nintendo.png",
     aestheticAndMood: {
       primaryMoods: {
         luxury: 1,
