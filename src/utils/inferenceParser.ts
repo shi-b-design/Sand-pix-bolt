@@ -10,6 +10,10 @@ export function parseInferenceResponse(aiResponse: string): ParsingResult {
   try {
     console.log('=== Raw AI Response (first 500 chars) ===');
     console.log(aiResponse.substring(0, 500));
+    console.log('=== FULL AI Response ===');
+    console.log(aiResponse);
+    console.log('=== Response Length ===');
+    console.log(`Total length: ${aiResponse.length} characters`);
     
     // Extract JSON from markdown code blocks
     const jsonMatch = aiResponse.match(/```json\s*([\s\S]*?)\s*```/);

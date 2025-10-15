@@ -17,7 +17,7 @@ export async function callGeminiAPI(prompt: string): Promise<string> {
       }],
       generationConfig: {
         temperature: 0.7,
-        maxOutputTokens: 8192,
+        maxOutputTokens: 30000,
       }
     })
   });
@@ -82,7 +82,7 @@ export async function callGeminiAPIForInference(prompt: string): Promise<string>
       }],
       generationConfig: {
         temperature: 0.2, // Lower temperature for more consistent analytical responses
-        maxOutputTokens: 16384, // Increased for detailed inference output
+        maxOutputTokens: 65536, // Increased for detailed inference output
         topP: 0.95,
         topK: 40,
       }
