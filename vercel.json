@@ -10,7 +10,7 @@
   ],
   "headers": [
     {
-      "source": "/images/(.*)",
+      "source": "dist/assets/images/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
