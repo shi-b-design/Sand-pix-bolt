@@ -16,8 +16,10 @@ export async function callGeminiAPI(prompt: string): Promise<string> {
         parts: [{ text: prompt }]
       }],
       generationConfig: {
-        temperature: 0.9,
+        temperature: 1.8,
         maxOutputTokens: 50000,
+        topP: 0.8,
+        topK: 80
         
       }
     })
