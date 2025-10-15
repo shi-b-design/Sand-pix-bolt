@@ -1,14 +1,14 @@
-import { useState } from 'react';
-import { Loader2 } from 'lucide-react';
-import { useSwipeStore } from '../store/useSwipeStore';
-import { inferUserPreferences } from '../utils/preferenceInference';
-import { callGeminiAPI, extractCodeFromMarkdown } from '../utils/geminiApi';
-import { generateLandingPagePrompt } from '../utils/prompts';
-import toast from 'react-hot-toast';
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
+import { useSwipeStore } from "../store/useSwipeStore";
+import { inferUserPreferences } from "../utils/preferenceInference";
+import { callGeminiAPI, extractCodeFromMarkdown } from "../utils/geminiApi";
+import { generateLandingPagePrompt } from "../utils/prompts";
+import toast from "react-hot-toast";
 
 export default function BrandInfoForm() {
-  const [brandName, setBrandName] = useState('');
-  const [brandTagline, setBrandTagline] = useState('');
+  const [brandName, setBrandName] = useState("");
+  const [brandTagline, setBrandTagline] = useState("");
   const {
     swipeResults,
     setBrandInfo,
@@ -16,14 +16,15 @@ export default function BrandInfoForm() {
     setHeroSectionCode,
     setCurrentPhase,
     isGeneratingHero,
-    setIsGeneratingHero
+    setIsGeneratingHero,
+    setInferenceDetails,
   } = useSwipeStore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!brandName.trim() || !brandTagline.trim()) {
-      toast.error('Please fill in all fields');
+      toast.error("Please fill in all fields");
       return;
     }
 
@@ -31,28 +32,54 @@ export default function BrandInfoForm() {
     setIsGeneratingHero(true);
 
     try {
-      const userPreferences = inferUserPreferences(swipeResults);
-      setUserPreferenceJSON(userPreferences);
+      // Step 1: Analyze user preferences with AI
+      toast.loading("Analyzing your preferences...", { id: "analyzing" });
 
+      const inferenceResult = await inferUserPreferences(swipeResults);
+      setUserPreferenceJSON(inferenceResult.preferences);
+
+      // Store inference details for debugging
+      if (inferenceResult.rawResponse) {
+        setInferenceDetails(inferenceResult.rawResponse);
+        console.log("AI Inference used:", inferenceResult.usedAI);
+      }
+
+      toast.dismiss("analyzing");
+      toast.loading("Generating your landing page...", { id: "generating" });
+
+      // Step 2: Generate hero section
       const heroPrompt = generateLandingPagePrompt(
-        userPreferences,
+        inferenceResult.preferences,
         brandName,
         brandTagline,
-        'hero-only'
+        "hero-only"
       );
 
       const response = await callGeminiAPI(heroPrompt);
       const heroCode = extractCodeFromMarkdown(response);
 
       setHeroSectionCode(heroCode);
-      setCurrentPhase('heroPreview');
-      toast.success('Hero section generated successfully!');
+      setCurrentPhase("heroPreview");
+
+      toast.dismiss("generating");
+      toast.success("Hero section generated successfully!");
     } catch (error) {
-      console.error('Error generating hero:', error);
+      console.error("Error generating hero:", error);
+      toast.dismiss("analyzing");
+      toast.dismiss("generating");
+
       if (error instanceof Error) {
-        toast.error(error.message);
+        if (error.message.includes("API rate limit")) {
+          toast.error(
+            "API rate limit reached. Please wait a moment and try again."
+          );
+        } else if (error.message.includes("API key")) {
+          toast.error("API configuration error. Please check your settings.");
+        } else {
+          toast.error(`Generation failed: ${error.message}`);
+        }
       } else {
-        toast.error('Failed to generate hero section. Please try again.');
+        toast.error("Failed to generate hero section. Please try again.");
       }
     } finally {
       setIsGeneratingHero(false);
@@ -119,7 +146,7 @@ export default function BrandInfoForm() {
                 Generating Hero Section...
               </>
             ) : (
-              'Generate My Landing Page'
+              "Generate My Landing Page"
             )}
           </button>
         </form>

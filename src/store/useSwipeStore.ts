@@ -33,6 +33,9 @@ interface SwipeStore {
   setIsGeneratingFullPage: (loading: boolean) => void;
   setIsRefining: (loading: boolean) => void;
 
+  inferenceDetails: string | null;
+  setInferenceDetails: (details: string | null) => void;
+
   reset: () => void;
 }
 
@@ -86,6 +89,10 @@ export const useSwipeStore = create<SwipeStore>((set) => ({
   setIsRefining: (loading) =>
     set({ isRefining: loading }),
 
+  inferenceDetails: null,
+  setInferenceDetails: (details) =>
+    set({ inferenceDetails: details }),
+
   reset: () =>
     set({
       currentIndex: 0,
@@ -100,5 +107,6 @@ export const useSwipeStore = create<SwipeStore>((set) => ({
       isGeneratingHero: false,
       isGeneratingFullPage: false,
       isRefining: false,
+      inferenceDetails: null,
     }),
 }));

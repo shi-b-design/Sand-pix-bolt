@@ -1,4 +1,7 @@
-import { SwipeResult, UserPreferenceJSON, BrandDesign } from '../types/preferences';
+import { SwipeResult, UserPreferenceJSON } from '../types/preferences';
+import { generateInferencePrompt } from './inferencePrompts';
+import { parseInferenceResponse } from './inferenceParser';
+import { callGeminiAPIForInference } from './geminiApi';
 
 function calculateStandardDeviation(values: number[]): number {
   const mean = values.reduce((sum, val) => sum + val, 0) / values.length;
@@ -44,7 +47,7 @@ function mostFrequent<T>(items: T[]): { value: T; frequency: number; confidence:
   };
 }
 
-export function inferUserPreferences(swipeResults: SwipeResult[]): UserPreferenceJSON {
+export function inferUserPreferencesSimple(swipeResults: SwipeResult[]): UserPreferenceJSON {
   const likedBrands = swipeResults.filter(result => result.liked);
   const likedDesigns = likedBrands.map(brand => brand.brandDesign);
 
@@ -110,8 +113,8 @@ export function inferUserPreferences(swipeResults: SwipeResult[]): UserPreferenc
   const headingFontWeightFreq = mostFrequent(likedDesigns.map(d => d.typography.heading.fontWeight));
   const bodyFontFamilyFreq = mostFrequent(likedDesigns.map(d => d.typography.body.fontFamily));
 
-  const allFooterElements = likedDesigns.flatMap(d => d.layoutAndStructure.footerSchema.elements);
-  const footerElementFreq = mostFrequent(allFooterElements);
+  // const allFooterElements = likedDesigns.flatMap(d => d.layoutAndStructure.footerSchema.elements);
+  // const footerElementFreq = mostFrequent(allFooterElements); // Unused for now
 
   const aiRefined: string[] = [];
   const overallConfidence = (
@@ -215,8 +218,83 @@ export function inferUserPreferences(swipeResults: SwipeResult[]): UserPreferenc
     }
   };
 
-  console.log('\n=== Preference Inference Complete ===');
+  console.log('\n=== Simple Preference Inference Complete ===');
   console.log(`Overall Confidence: ${userPreference.metadata.inference.confidence}`);
 
   return userPreference;
+}
+
+export async function inferUserPreferencesAI(swipeResults: SwipeResult[]): Promise<{ success: boolean; data?: UserPreferenceJSON; error?: string; rawResponse?: string }> {
+  try {
+    console.log('=== AI Preference Inference Started ===');
+    console.log(`Total swipes: ${swipeResults.length}`);
+    
+    const prompt = generateInferencePrompt(swipeResults);
+    console.log('Generated inference prompt, calling Gemini API...');
+    
+    const rawResponse = await callGeminiAPIForInference(prompt);
+    console.log('Received AI response, parsing...');
+    
+    const parseResult = parseInferenceResponse(rawResponse);
+    
+    if (parseResult.success && parseResult.data) {
+      console.log('=== AI Preference Inference Complete ===');
+      console.log(`Overall Confidence: ${parseResult.data.metadata.inference.confidence}`);
+      console.log(`AI Refined Parameters: ${parseResult.data.metadata.inference.aiRefined.join(', ')}`);
+      
+      return {
+        success: true,
+        data: parseResult.data,
+        rawResponse: rawResponse
+      };
+    } else {
+      console.error('AI inference parsing failed:', parseResult.error);
+      return {
+        success: false,
+        error: parseResult.error || 'Failed to parse AI response',
+        rawResponse: rawResponse
+      };
+    }
+  } catch (error) {
+    console.error('AI inference failed:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error during AI inference'
+    };
+  }
+}
+
+export interface InferenceResult {
+  preferences: UserPreferenceJSON;
+  rawResponse?: string;
+  usedAI: boolean;
+}
+
+export async function inferUserPreferences(swipeResults: SwipeResult[]): Promise<InferenceResult> {
+  console.log('=== Starting Preference Inference ===');
+  
+  // Try AI inference first
+  const aiResult = await inferUserPreferencesAI(swipeResults);
+  
+  if (aiResult.success && aiResult.data) {
+    console.log('Using AI inference result');
+    return {
+      preferences: aiResult.data,
+      rawResponse: aiResult.rawResponse,
+      usedAI: true
+    };
+  }
+  
+  // Fallback to simple inference
+  console.warn('AI inference failed, falling back to simple inference');
+  console.warn('AI Error:', aiResult.error);
+  
+  const simpleResult = inferUserPreferencesSimple(swipeResults);
+  console.log('Using simple inference result');
+  
+  return {
+    preferences: simpleResult,
+    rawResponse: undefined,
+    usedAI: false
+  };
 }
