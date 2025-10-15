@@ -4,13 +4,13 @@
   "public": true,
   "rewrites": [
     {
-      "source": "/((?!images/).*)",
+      "source": "/((?!assets/).*)",
       "destination": "/index.html"
     }
   ],
   "headers": [
     {
-      "source": "dist/assets/images/(.*)",
+      "source": "assets/images/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
