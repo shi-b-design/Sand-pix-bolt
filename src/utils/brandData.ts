@@ -1,9 +1,21 @@
 import { BrandDesign } from '../types/preferences';
 
+// Import images
+import nintendoImage from '../assets/images/nintendo.png';
+import disneyImage from '../assets/images/disney.png';
+import chanelImage from '../assets/images/chanel.png';
+import amexImage from '../assets/images/amex.png';
+import bmwImage from '../assets/images/bmw.png';
+import nikeImage from '../assets/images/nike.png';
+import teslaImage from '../assets/images/tesla.png';
+import mcdonaldImage from '../assets/images/mcdonald.png';
+import mercedesImage from '../assets/images/mercedes.png';
+import cocaColaImage from '../assets/images/coca-cola.png';
+
 export const brandDesigns: BrandDesign[] = [
   {
     name: "Nintendo",
-    image: "/images/nintendo.png",
+    image: nintendoImage,
     aestheticAndMood: {
       primaryMoods: {
         luxury: 1,
@@ -84,7 +96,7 @@ export const brandDesigns: BrandDesign[] = [
   },
   {
     name: "Disney",
-    image: "/images/disney.png",
+    image: disneyImage,
     aestheticAndMood: {
       primaryMoods: {
         luxury: 3,
@@ -165,7 +177,7 @@ export const brandDesigns: BrandDesign[] = [
   },
   {
     name: "Chanel",
-    image: "/images/chanel.png",
+    image: chanelImage,
     aestheticAndMood: {
       primaryMoods: {
         luxury: 10,
@@ -246,7 +258,7 @@ export const brandDesigns: BrandDesign[] = [
   },
   {
     name: "American Express",
-    image: "/images/amex.png",
+    image: amexImage,
     aestheticAndMood: {
       primaryMoods: {
         luxury: 8,
@@ -327,7 +339,7 @@ export const brandDesigns: BrandDesign[] = [
   },
   {
     name: "BMW",
-    image: "/images/bmw.png",
+    image: bmwImage,
     aestheticAndMood: {
       primaryMoods: {
         luxury: 9,
@@ -408,7 +420,7 @@ export const brandDesigns: BrandDesign[] = [
   },
   {
     name: "Nike",
-    image: "/images/nike.png",
+    image: nikeImage,
     aestheticAndMood: {
       primaryMoods: {
         luxury: 5,
@@ -489,7 +501,7 @@ export const brandDesigns: BrandDesign[] = [
   },
   {
     name: "Tesla",
-    image: "/images/tesla.png",
+    image: teslaImage,
     aestheticAndMood: {
       primaryMoods: {
         luxury: 7,
@@ -570,7 +582,7 @@ export const brandDesigns: BrandDesign[] = [
   },
   {
     name: "McDonald's",
-    image: "/images/mcdonald.png",
+    image: mcdonaldImage,
     aestheticAndMood: {
       primaryMoods: {
         luxury: 1,
@@ -651,7 +663,7 @@ export const brandDesigns: BrandDesign[] = [
   },
   {
     name: "Mercedes",
-    image: "/images/mercedes.png",
+    image: mercedesImage,
     aestheticAndMood: {
       primaryMoods: {
         luxury: 10,
@@ -732,7 +744,7 @@ export const brandDesigns: BrandDesign[] = [
   },
   {
     name: "Coca-Cola",
-    image: "/images/coca-cola.png",
+    image: cocaColaImage,
     aestheticAndMood: {
       primaryMoods: {
         luxury: 2,
