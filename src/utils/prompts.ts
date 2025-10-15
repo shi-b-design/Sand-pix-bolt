@@ -20,7 +20,7 @@ ${scope === 'hero-only'
 - **Styling:** Use Tailwind CSS (${scope === 'hero-only' ? 'assume CDN is already loaded' : 'via CDN script'})
 - **Responsiveness:** Must be fully functional and visually appealing on mobile, tablet, and desktop
 ${scope === 'full-page' ? '  - Navigation links must collapse into a functional hamburger menu on screens smaller than 768px' : ''}
-- **Interactivity:** ${scope === 'hero-only' ? 'Use Alpine.js (via CDN) for any simple toggles if needed' : 'Use Alpine.js (via CDN) for simple toggles like announcement bar close button and mobile menu toggle'}
+- **Interactivity:** ${scope === 'hero-only' ? 'Use Alpine.js with Intersect plugin (via CDN) for scroll animations and simple toggles if needed' : 'Use Alpine.js with Intersect plugin (via CDN) for scroll animations, announcement bar close button and mobile menu toggle'}
 - **Accessibility:** Include proper semantic HTML, alt text, ARIA labels${scope === 'full-page' ? ', keyboard navigation support' : ''}
 
 # User Preference Profile
@@ -196,9 +196,23 @@ ${userPreferenceJSON.layoutAndStructure.headerSchema.showAnnouncementBar ? `
 ## CDN Scripts to Include in <head>
 \`\`\`html
 <script src="https://cdn.tailwindcss.com"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.x.x/dist/cdn.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 \`\`\`
 `}
+
+# Design Quality Guidelines
+- **Avoid Generic Templates:** Create unique, custom layouts that feel handcrafted, not template-based
+- **Visual Hierarchy:** Use typography scale, spacing, and color contrast to create clear visual hierarchy
+- **Brand Personality:** Infuse the design with the brand's unique character and voice
+- **Professional Polish:** Every element should feel intentional and refined
+- **Modern Standards:** Use contemporary design patterns while avoiding overused trends
+
+# Confidence-Based Priorities
+${Object.entries(userPreferenceJSON.aestheticAndMood.primaryMoods)
+  .filter(([, mood]: [string, { value: number; confidence: number }]) => mood.confidence > 0.8)
+  .map(([moodName, mood]: [string, { value: number; confidence: number }]) => `- **${moodName.charAt(0).toUpperCase() + moodName.slice(1)} (${mood.confidence.toFixed(2)} confidence):** This preference is highly confident - strictly adhere to this aesthetic direction`)
+  .join('\n')}
 
 # Design Notes
 - **Spacing:** Use ${userPreferenceJSON.layoutAndStructure.density} density (${
@@ -223,16 +237,32 @@ ${userPreferenceJSON.layoutAndStructure.headerSchema.showAnnouncementBar ? `
   'Text-only with hover underline'
 }
 - **Aesthetic Mood:** The design should ${
-  userPreferenceJSON.aestheticAndMood.primaryMoods.luxury.value > 7 ? 'feel luxurious and premium with elegant typography and ample whitespace' :
-  userPreferenceJSON.aestheticAndMood.primaryMoods.playful.value > 7 ? 'feel fun and energetic with vibrant colors and rounded shapes' :
-  userPreferenceJSON.aestheticAndMood.primaryMoods.minimalist.value > 7 ? 'feel clean and minimal with plenty of whitespace and simple elements' :
-  userPreferenceJSON.aestheticAndMood.primaryMoods.techy.value > 7 ? 'feel modern and tech-forward with geometric shapes and sleek typography' :
-  'balance professionalism with approachability'
+  userPreferenceJSON.aestheticAndMood.primaryMoods.luxury.value > 7 ? 'feel luxurious and premium with elegant typography, refined spacing, and sophisticated color combinations. Use high-quality visual elements and subtle gradients' :
+  userPreferenceJSON.aestheticAndMood.primaryMoods.playful.value > 7 ? 'feel fun and energetic with vibrant colors, playful typography, rounded shapes, and interactive elements. Include dynamic visual elements and engaging animations' :
+  userPreferenceJSON.aestheticAndMood.primaryMoods.minimalist.value > 7 ? 'feel clean and minimal with plenty of whitespace, simple typography, monochromatic color schemes, and subtle details. Focus on content hierarchy and breathing room' :
+  userPreferenceJSON.aestheticAndMood.primaryMoods.techy.value > 7 ? 'feel modern and tech-forward with geometric shapes, sleek typography, futuristic elements, and clean lines. Use bold contrasts and contemporary layouts' :
+  userPreferenceJSON.aestheticAndMood.primaryMoods.corporate.value > 7 ? 'feel professional and trustworthy with structured layouts, conservative color palettes, and clear typography. Emphasize credibility and stability' :
+  userPreferenceJSON.aestheticAndMood.primaryMoods.earthy.value > 7 ? 'feel natural and organic with earth tones, textured elements, and warm typography. Use natural imagery and organic shapes' :
+  userPreferenceJSON.aestheticAndMood.primaryMoods.brutalist.value > 7 ? 'feel bold and raw with stark contrasts, geometric shapes, and industrial aesthetics. Use bold typography and structural elements' :
+  'balance professionalism with approachability, using clean layouts and friendly but credible design elements'
 }
 ${userPreferenceJSON.microInteractionsAndAnimation.useScrollAnimation ? `
-- **Animations:** Include subtle ${userPreferenceJSON.microInteractionsAndAnimation.scrollAnimationType} animations on scroll
+- **Animations:** Include subtle ${userPreferenceJSON.microInteractionsAndAnimation.scrollAnimationType} animations on scroll to enhance user engagement
 ` : ''}
 - **Hover Effects:** Apply ${userPreferenceJSON.microInteractionsAndAnimation.hoverEffect.type} hover effects to ${userPreferenceJSON.microInteractionsAndAnimation.hoverEffect.target.join(' and ')}
+
+# Anti-Generic Design Principles
+- **Unique Layouts:** Avoid common template patterns like centered hero sections with generic CTA buttons
+- **Custom Visual Elements:** Create distinctive visual elements that reflect the brand's personality
+- **Thoughtful Typography:** Use typography combinations that feel curated, not randomly selected
+- **Intentional Color Usage:** Apply colors purposefully to create mood and hierarchy
+- **Brand-Specific Details:** Include unique touches that make the design feel custom-made
+- **Avoid AI Clichés:** Steer clear of overused AI-generated design patterns like:
+  - Generic gradient backgrounds without purpose
+  - Overly symmetrical layouts that feel robotic
+  - Cliché iconography and stock photo aesthetics
+  - Predictable button styles and hover effects
+  - Template-like section arrangements
 
 # Content Guidelines
 - Use placeholder text that makes sense for the brand
@@ -262,6 +292,7 @@ Return the complete HTML document like this:
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${brandName} - ${brandTagline}</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.x.x/dist/cdn.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body>
