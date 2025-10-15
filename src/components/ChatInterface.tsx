@@ -1,21 +1,24 @@
-import { useState, useRef, useEffect } from 'react';
-import { Send, X, Loader2, Sparkles } from 'lucide-react';
-import { useSwipeStore } from '../store/useSwipeStore';
-import { callGeminiAPI, extractCodeFromMarkdown } from '../utils/geminiApi';
-import { generateRefinementPrompt, generateLandingPagePrompt } from '../utils/prompts';
-import toast from 'react-hot-toast';
+import { useState, useRef, useEffect } from "react";
+import { Send, X, Loader2, Sparkles } from "lucide-react";
+import { useSwipeStore } from "../store/useSwipeStore";
+import { callGeminiAPI, extractCodeFromMarkdown } from "../utils/geminiApi";
+import {
+  generateRefinementPrompt,
+  generateLandingPagePrompt,
+} from "../utils/prompts";
+import toast from "react-hot-toast";
 
 const SUGGESTED_PROMPTS = [
-  'Make it more minimal',
-  'Use darker colors',
-  'Add gradient background',
-  'Make it more playful',
-  'Add more whitespace',
-  'Larger text sizes'
+  "Make it more minimal",
+  "Use darker colors",
+  "Add gradient background",
+  "Make it more playful",
+  "Add more whitespace",
+  "Larger text sizes",
 ];
 
 export default function ChatInterface() {
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const {
     chatMessages,
@@ -30,11 +33,11 @@ export default function ChatInterface() {
     isRefining,
     setIsRefining,
     isGeneratingFullPage,
-    setIsGeneratingFullPage
+    setIsGeneratingFullPage,
   } = useSwipeStore();
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatMessages]);
 
   const handleSendMessage = async (message: string) => {
@@ -42,12 +45,12 @@ export default function ChatInterface() {
 
     const userMessage = message.trim();
     addChatMessage({
-      role: 'user',
+      role: "user",
       content: userMessage,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
 
-    setInput('');
+    setInput("");
     setIsRefining(true);
 
     try {
@@ -65,24 +68,24 @@ export default function ChatInterface() {
       setHeroSectionCode(updatedHeroCode);
 
       addChatMessage({
-        role: 'assistant',
-        content: 'Hero section updated successfully! Check the preview.',
-        timestamp: new Date()
+        role: "assistant",
+        content: "Hero section updated successfully! Check the preview.",
+        timestamp: new Date(),
       });
 
-      toast.success('Design refined successfully!');
+      toast.success("Design refined successfully!");
     } catch (error) {
-      console.error('Error refining design:', error);
+      console.error("Error refining design:", error);
       addChatMessage({
-        role: 'assistant',
-        content: 'Sorry, I encountered an error. Please try again.',
-        timestamp: new Date()
+        role: "assistant",
+        content: "Sorry, I encountered an error. Please try again.",
+        timestamp: new Date(),
       });
 
       if (error instanceof Error) {
         toast.error(error.message);
       } else {
-        toast.error('Failed to refine design. Please try again.');
+        toast.error("Failed to refine design. Please try again.");
       }
     } finally {
       setIsRefining(false);
@@ -99,21 +102,21 @@ export default function ChatInterface() {
         userPreferenceJSON,
         brandName,
         brandTagline,
-        'full-page'
+        "full-page"
       );
 
       const response = await callGeminiAPI(fullPagePrompt);
       const fullPageCode = extractCodeFromMarkdown(response);
 
       setFullPageCode(fullPageCode);
-      setCurrentPhase('fullPagePreview');
-      toast.success('Full page generated successfully!');
+      setCurrentPhase("fullPagePreview");
+      toast.success("Full page generated successfully!");
     } catch (error) {
-      console.error('Error generating full page:', error);
+      console.error("Error generating full page:", error);
       if (error instanceof Error) {
         toast.error(error.message);
       } else {
-        toast.error('Failed to generate full page. Please try again.');
+        toast.error("Failed to generate full page. Please try again.");
       }
     } finally {
       setIsGeneratingFullPage(false);
@@ -126,9 +129,9 @@ export default function ChatInterface() {
         <div
           className="bg-white rounded-lg shadow-2xl overflow-hidden"
           style={{
-            width: '800px',
-            maxWidth: '100%',
-            height: '80vh'
+            width: "800px",
+            maxWidth: "100%",
+            height: "80vh",
           }}
         >
           <iframe
@@ -139,6 +142,7 @@ export default function ChatInterface() {
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <script src="https://cdn.tailwindcss.com"></script>
+                <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.x.x/dist/cdn.min.js"></script>
                 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
               </head>
               <body>
@@ -159,7 +163,7 @@ export default function ChatInterface() {
             <p className="text-xs text-gray-400">Refine your hero section</p>
           </div>
           <button
-            onClick={() => setCurrentPhase('heroPreview')}
+            onClick={() => setCurrentPhase("heroPreview")}
             className="p-1 hover:bg-gray-600 rounded transition"
           >
             <X className="w-5 h-5 text-gray-300" />
@@ -170,7 +174,9 @@ export default function ChatInterface() {
           {chatMessages.length === 0 && (
             <div className="text-center text-gray-400 py-8">
               <MessageSquare className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p className="mb-4">Tell me how you'd like to refine the design</p>
+              <p className="mb-4">
+                Tell me how you'd like to refine the design
+              </p>
               <div className="grid grid-cols-2 gap-2">
                 {SUGGESTED_PROMPTS.map((prompt) => (
                   <button
@@ -189,13 +195,15 @@ export default function ChatInterface() {
           {chatMessages.map((message, index) => (
             <div
               key={index}
-              className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+              className={`flex ${
+                message.role === "user" ? "justify-end" : "justify-start"
+              }`}
             >
               <div
                 className={`max-w-[80%] px-4 py-2 rounded-lg ${
-                  message.role === 'user'
-                    ? 'bg-blue-500 text-white'
-                    : 'bg-gray-700 text-gray-200'
+                  message.role === "user"
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-700 text-gray-200"
                 }`}
               >
                 <p className="text-sm">{message.content}</p>
@@ -238,7 +246,7 @@ export default function ChatInterface() {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleSendMessage(input)}
+              onKeyPress={(e) => e.key === "Enter" && handleSendMessage(input)}
               placeholder="Describe your changes..."
               disabled={isRefining}
               className="flex-1 px-4 py-2 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-blue-500 outline-none disabled:opacity-50"

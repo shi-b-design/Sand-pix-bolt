@@ -20,7 +20,7 @@ ${scope === 'hero-only'
 - **Styling:** Use Tailwind CSS (${scope === 'hero-only' ? 'assume CDN is already loaded' : 'via CDN script'})
 - **Responsiveness:** Must be fully functional and visually appealing on mobile, tablet, and desktop
 ${scope === 'full-page' ? '  - Navigation links must collapse into a functional hamburger menu on screens smaller than 768px' : ''}
-- **Interactivity:** ${scope === 'hero-only' ? 'Use Alpine.js (via CDN) for any simple toggles if needed' : 'Use Alpine.js (via CDN) for simple toggles like announcement bar close button and mobile menu toggle'}
+- **Interactivity:** ${scope === 'hero-only' ? 'Use Alpine.js with Intersect plugin (via CDN) for scroll animations and simple toggles if needed' : 'Use Alpine.js with Intersect plugin (via CDN) for scroll animations, announcement bar close button and mobile menu toggle'}
 - **Accessibility:** Include proper semantic HTML, alt text, ARIA labels${scope === 'full-page' ? ', keyboard navigation support' : ''}
 
 # User Preference Profile
@@ -196,6 +196,7 @@ ${userPreferenceJSON.layoutAndStructure.headerSchema.showAnnouncementBar ? `
 ## CDN Scripts to Include in <head>
 \`\`\`html
 <script src="https://cdn.tailwindcss.com"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.x.x/dist/cdn.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 \`\`\`
 `}
@@ -291,6 +292,7 @@ Return the complete HTML document like this:
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${brandName} - ${brandTagline}</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.x.x/dist/cdn.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body>

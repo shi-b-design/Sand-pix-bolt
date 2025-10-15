@@ -1,14 +1,21 @@
-import { useState } from 'react';
-import { Monitor, Tablet, Smartphone, MessageSquare, Sparkles, Loader2 } from 'lucide-react';
-import { useSwipeStore } from '../store/useSwipeStore';
-import { callGeminiAPI, extractCodeFromMarkdown } from '../utils/geminiApi';
-import { generateLandingPagePrompt } from '../utils/prompts';
-import toast from 'react-hot-toast';
+import { useState } from "react";
+import {
+  Monitor,
+  Tablet,
+  Smartphone,
+  MessageSquare,
+  Sparkles,
+  Loader2,
+} from "lucide-react";
+import { useSwipeStore } from "../store/useSwipeStore";
+import { callGeminiAPI, extractCodeFromMarkdown } from "../utils/geminiApi";
+import { generateLandingPagePrompt } from "../utils/prompts";
+import toast from "react-hot-toast";
 
-type ViewportSize = 'mobile' | 'tablet' | 'desktop';
+type ViewportSize = "mobile" | "tablet" | "desktop";
 
 export default function HeroPreview() {
-  const [viewport, setViewport] = useState<ViewportSize>('desktop');
+  const [viewport, setViewport] = useState<ViewportSize>("desktop");
   const {
     heroSectionCode,
     brandName,
@@ -17,13 +24,13 @@ export default function HeroPreview() {
     setFullPageCode,
     setCurrentPhase,
     isGeneratingFullPage,
-    setIsGeneratingFullPage
+    setIsGeneratingFullPage,
   } = useSwipeStore();
 
   const viewportSizes = {
-    mobile: '375px',
-    tablet: '768px',
-    desktop: '100%'
+    mobile: "375px",
+    tablet: "768px",
+    desktop: "100%",
   };
 
   const handleGenerateFullPage = async () => {
@@ -36,21 +43,21 @@ export default function HeroPreview() {
         userPreferenceJSON,
         brandName,
         brandTagline,
-        'full-page'
+        "full-page"
       );
 
       const response = await callGeminiAPI(fullPagePrompt);
       const fullPageCode = extractCodeFromMarkdown(response);
 
       setFullPageCode(fullPageCode);
-      setCurrentPhase('fullPagePreview');
-      toast.success('Full page generated successfully!');
+      setCurrentPhase("fullPagePreview");
+      toast.success("Full page generated successfully!");
     } catch (error) {
-      console.error('Error generating full page:', error);
+      console.error("Error generating full page:", error);
       if (error instanceof Error) {
         toast.error(error.message);
       } else {
-        toast.error('Failed to generate full page. Please try again.');
+        toast.error("Failed to generate full page. Please try again.");
       }
     } finally {
       setIsGeneratingFullPage(false);
@@ -58,7 +65,7 @@ export default function HeroPreview() {
   };
 
   const handleRefineDesign = () => {
-    setCurrentPhase('chat');
+    setCurrentPhase("chat");
   };
 
   return (
@@ -66,40 +73,44 @@ export default function HeroPreview() {
       <div className="bg-gray-800 border-b border-gray-700 px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-bold text-white">Hero Section Preview</h2>
-            <p className="text-sm text-gray-400 mt-1">{brandName} - {brandTagline}</p>
+            <h2 className="text-xl font-bold text-white">
+              Hero Section Preview
+            </h2>
+            <p className="text-sm text-gray-400 mt-1">
+              {brandName} - {brandTagline}
+            </p>
           </div>
 
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 bg-gray-700 rounded-lg p-1">
               <button
-                onClick={() => setViewport('mobile')}
+                onClick={() => setViewport("mobile")}
                 className={`p-2 rounded transition ${
-                  viewport === 'mobile'
-                    ? 'bg-blue-500 text-white'
-                    : 'text-gray-300 hover:text-white'
+                  viewport === "mobile"
+                    ? "bg-blue-500 text-white"
+                    : "text-gray-300 hover:text-white"
                 }`}
                 title="Mobile view"
               >
                 <Smartphone className="w-4 h-4" />
               </button>
               <button
-                onClick={() => setViewport('tablet')}
+                onClick={() => setViewport("tablet")}
                 className={`p-2 rounded transition ${
-                  viewport === 'tablet'
-                    ? 'bg-blue-500 text-white'
-                    : 'text-gray-300 hover:text-white'
+                  viewport === "tablet"
+                    ? "bg-blue-500 text-white"
+                    : "text-gray-300 hover:text-white"
                 }`}
                 title="Tablet view"
               >
                 <Tablet className="w-4 h-4" />
               </button>
               <button
-                onClick={() => setViewport('desktop')}
+                onClick={() => setViewport("desktop")}
                 className={`p-2 rounded transition ${
-                  viewport === 'desktop'
-                    ? 'bg-blue-500 text-white'
-                    : 'text-gray-300 hover:text-white'
+                  viewport === "desktop"
+                    ? "bg-blue-500 text-white"
+                    : "text-gray-300 hover:text-white"
                 }`}
                 title="Desktop view"
               >
@@ -115,8 +126,8 @@ export default function HeroPreview() {
           className="bg-white rounded-lg shadow-2xl overflow-hidden transition-all duration-300"
           style={{
             width: viewportSizes[viewport],
-            maxWidth: '100%',
-            height: '80vh'
+            maxWidth: "100%",
+            height: "80vh",
           }}
         >
           <iframe
@@ -127,6 +138,7 @@ export default function HeroPreview() {
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <script src="https://cdn.tailwindcss.com"></script>
+                <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.x.x/dist/cdn.min.js"></script>
                 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
               </head>
               <body>
